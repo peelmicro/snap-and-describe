@@ -49,9 +49,23 @@ export async function searchRoutes(app: FastifyInstance) {
 
     const total = Number(countResult[0]?.total || 0);
 
+    // Normalize snake_case from raw SQL to camelCase for API consistency
+    const items = results.map((row: any) => ({
+      id: row.id,
+      code: row.code,
+      name: row.name,
+      suggestedName: row.suggested_name,
+      tags: row.tags,
+      description: row.description,
+      storagePath: row.storage_path,
+      imageMetadata: row.image_metadata,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+    }));
+
     return {
       query: q,
-      items: results,
+      items,
       page,
       limit,
       total,

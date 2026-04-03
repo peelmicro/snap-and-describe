@@ -10,7 +10,7 @@ import {
   messages,
 } from "../db/schema.ts";
 import { generateCode } from "../common/code-generator.ts";
-import { uploadBuffer, getPresignedUrl, deleteObject } from "../storage/minio-client.ts";
+import { uploadBuffer, downloadBuffer, getPresignedUrl, deleteObject } from "../storage/minio-client.ts";
 import { analyzeImage } from "../vision/vision-service.ts";
 
 export async function imagesRoutes(app: FastifyInstance) {
@@ -96,6 +96,28 @@ export async function imagesRoutes(app: FastifyInstance) {
     }
   );
 
+  // Serve image file (proxy from MinIO)
+  app.get<{ Params: { id: string } }>(
+    "/images/:id/file",
+    async (request, reply) => {
+      const { id } = request.params;
+      const [image] = await db.select().from(images).where(eq(images.id, id));
+      if (!image || !image.storagePath) {
+        return reply.status(404).send({ error: "Image not found" });
+      }
+
+      const key = image.storagePath.replace("images/", "");
+      const buffer = await downloadBuffer(key);
+      const format = image.imageMetadata?.format || "jpeg";
+      const contentType = `image/${format === "jpg" ? "jpeg" : format}`;
+
+      return reply
+        .header("Content-Type", contentType)
+        .header("Cache-Control", "public, max-age=3600")
+        .send(buffer);
+    }
+  );
+
   // Get image by code
   app.get<{ Params: { code: string } }>(
     "/images/code/:code",
@@ -139,6 +161,8 @@ export async function imagesRoutes(app: FastifyInstance) {
     try {
       visionResult = await analyzeImage(buffer, mimeType);
     } catch (err) {
+      // Log vision error for debugging
+      app.log.error({ err, mimeType, bufferSize: buffer.length }, "Vision analysis failed");
       // Save image even if vision fails
       const [saved] = await db
         .insert(images)
