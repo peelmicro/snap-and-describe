@@ -2,6 +2,7 @@ import { config } from "dotenv";
 import { resolve } from "node:path";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import { ensureBucket } from "./storage/minio-client.ts";
 
 // Load .env from project root
 config({ path: resolve(import.meta.dirname, "../../../.env") });
@@ -17,6 +18,8 @@ app.get("/health", async () => {
 });
 
 try {
+  await ensureBucket();
+  app.log.info("MinIO bucket ready");
   await app.listen({ port: PORT, host: "0.0.0.0" });
 } catch (err) {
   app.log.error(err);
