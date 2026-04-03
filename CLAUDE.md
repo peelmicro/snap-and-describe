@@ -38,7 +38,7 @@ snap-and-describe/
 
 ### TypeScript / Backend (Fastify)
 
-- Run with Node.js 24 native TypeScript (`--experimental-strip-types`) — no compilation step
+- Run with Node.js 24 native TypeScript (`--experimental-transform-types`) — no compilation step
 - Use Fastify with async/await handlers
 - Drizzle ORM for database access — SQL-like, type-safe queries
 - Organize by domain: each entity gets its own folder with schema, routes, and service
@@ -76,7 +76,7 @@ snap-and-describe/
 ### Backend (from `apps/api/`)
 
 ```bash
-node --experimental-strip-types src/server.ts     # Start API server
+node --experimental-transform-types src/server.ts     # Start API server
 npx vitest                                         # Run tests
 npx drizzle-kit generate                           # Generate migrations
 npx drizzle-kit migrate                            # Apply migrations

@@ -2,7 +2,7 @@
   "name": "snap-and-describe",
   "private": true,
   "scripts": {
-    "api": "cd apps/api && node --experimental-strip-types src/server.ts",
+    "api": "cd apps/api && node --experimental-transform-types src/server.ts",
     "api:test": "cd apps/api && npx vitest --run",
     "expo:web": "cd apps/mobile && npx expo start --web",
     "expo:start": "cd apps/mobile && npx expo start",
@@ -16,7 +16,7 @@
     "dc:logs:minio": "docker compose logs -f minio",
     "db:generate": "cd apps/api && npx drizzle-kit generate",
     "db:migrate": "cd apps/api && npx drizzle-kit migrate",
-    "db:seed": "cd apps/api && node --experimental-strip-types src/seed/index.ts",
+    "db:seed": "cd apps/api && node --experimental-transform-types src/seed/index.ts",
     "db:setup": "npm run db:migrate && npm run db:seed"
   }
 }
