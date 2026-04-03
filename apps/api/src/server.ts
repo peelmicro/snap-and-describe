@@ -1,5 +1,10 @@
+import { config } from "dotenv";
+import { resolve } from "node:path";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+
+// Load .env from project root
+config({ path: resolve(import.meta.dirname, "../../../.env") });
 
 const PORT = Number(process.env.API_PORT) || 3000;
 

@@ -1,3 +1,9 @@
+import { config } from "dotenv";
+import { resolve } from "node:path";
+
+// Load .env from project root
+config({ path: resolve(import.meta.dirname, "../../../../.env") });
+
 import { seedTypes } from "./seed-types.ts";
 import { seedImages } from "./seed-images.ts";
 import { seedClassifications } from "./seed-classifications.ts";
