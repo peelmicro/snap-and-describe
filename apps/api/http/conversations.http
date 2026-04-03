@@ -1,0 +1,28 @@
+@baseUrl = http://localhost:3000
+
+### Send first message about an image (creates conversation)
+### Replace <imageId> with actual UUID from GET /images
+POST {{baseUrl}}/images/<imageId>/chat
+Content-Type: application/json
+
+{
+  "message": "What can you tell me about this photo?"
+}
+
+### Send follow-up message (uses existing conversation)
+### Replace <imageId> and <conversationId> with actual UUIDs
+POST {{baseUrl}}/images/<imageId>/chat
+Content-Type: application/json
+
+{
+  "message": "What colors are dominant in this image?",
+  "conversationId": "<conversationId>"
+}
+
+### Get all conversations for an image
+### Replace <imageId> with actual UUID
+GET {{baseUrl}}/images/<imageId>/conversations
+
+### Get single conversation with messages
+### Replace <conversationId> with actual UUID
+GET {{baseUrl}}/conversations/<conversationId>

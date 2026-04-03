@@ -6,6 +6,7 @@ import { ensureBucket } from "./storage/minio-client.ts";
 import { typesRoutes } from "./types/routes.ts";
 import { imagesRoutes } from "./images/routes.ts";
 import { classificationsRoutes } from "./classifications/routes.ts";
+import { conversationsRoutes } from "./conversations/routes.ts";
 
 // Load .env from project root
 config({ path: resolve(import.meta.dirname, "../../../.env") });
@@ -21,8 +22,9 @@ app.get("/health", async () => {
 });
 
 await app.register(typesRoutes);
-await app.register(imagesRoutes);
 await app.register(classificationsRoutes);
+await app.register(conversationsRoutes);
+await app.register(imagesRoutes);
 
 try {
   await ensureBucket();
