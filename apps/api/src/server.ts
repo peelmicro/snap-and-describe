@@ -7,6 +7,7 @@ import { typesRoutes } from "./types/routes.ts";
 import { imagesRoutes } from "./images/routes.ts";
 import { classificationsRoutes } from "./classifications/routes.ts";
 import { conversationsRoutes } from "./conversations/routes.ts";
+import { searchRoutes } from "./search/routes.ts";
 
 // Load .env from project root
 config({ path: resolve(import.meta.dirname, "../../../.env") });
@@ -24,6 +25,7 @@ app.get("/health", async () => {
 await app.register(typesRoutes);
 await app.register(classificationsRoutes);
 await app.register(conversationsRoutes);
+await app.register(searchRoutes);
 await app.register(imagesRoutes);
 
 try {

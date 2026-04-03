@@ -1,0 +1,22 @@
+@baseUrl = http://localhost:3000
+
+### Search for food photos
+GET {{baseUrl}}/search?q=food
+
+### Search for buildings
+GET {{baseUrl}}/search?q=buildings
+
+### Search for sunset
+GET {{baseUrl}}/search?q=sunset
+
+### Search for nature
+GET {{baseUrl}}/search?q=nature
+
+### Search for text/signs
+GET {{baseUrl}}/search?q=street sign
+
+### Search for coffee
+GET {{baseUrl}}/search?q=coffee
+
+### Search with pagination
+GET {{baseUrl}}/search?q=beach&page=1&limit=2
