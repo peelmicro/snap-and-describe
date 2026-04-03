@@ -1,0 +1,18 @@
+{
+  "name": "snap-and-describe",
+  "private": true,
+  "scripts": {
+    "api": "cd apps/api && node --experimental-strip-types src/server.ts",
+    "api:test": "cd apps/api && npx vitest --run",
+    "expo:web": "cd apps/mobile && npx expo start --web",
+    "expo:start": "cd apps/mobile && npx expo start",
+    "expo:test": "cd apps/mobile && npx vitest --run",
+    "dc:up": "docker compose up -d",
+    "dc:down": "docker compose down",
+    "dc:ps": "docker compose ps",
+    "dc:clean": "docker compose down -v",
+    "dc:logs": "docker compose logs -f",
+    "dc:logs:pg": "docker compose logs -f postgres",
+    "dc:logs:minio": "docker compose logs -f minio"
+  }
+}

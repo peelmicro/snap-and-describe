@@ -25,7 +25,7 @@ snap-and-describe/
 │   │   │   ├── db/              # Drizzle schema, connection, migrations
 │   │   │   └── server.ts        # Fastify app entry point
 │   │   └── tests/               # Vitest tests
-│   └── expo-router/      # Expo universal app (iOS + Android + Web)
+│   └── mobile/           # Expo universal app (iOS + Android + Web)
 │       ├── app/                  # File-based routing
 │       ├── components/           # Shared components
 │       ├── hooks/                # API hooks
@@ -82,7 +82,7 @@ npx drizzle-kit generate                           # Generate migrations
 npx drizzle-kit migrate                            # Apply migrations
 ```
 
-### Frontend (from `apps/expo-router/`)
+### Frontend (from `apps/mobile/`)
 
 ```bash
 npx expo start --web                               # Start Expo web
