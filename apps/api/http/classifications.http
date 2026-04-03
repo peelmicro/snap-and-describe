@@ -1,0 +1,16 @@
+@baseUrl = http://localhost:3000
+
+### List all classifications
+GET {{baseUrl}}/classifications
+
+### Get classification by code
+GET {{baseUrl}}/classifications/code/CLF-2026-04-000001
+
+### Get classifications by image id (replace <imageId> with actual UUID)
+GET {{baseUrl}}/classifications/image/<imageId>
+
+### Get classification by id (replace <id> with actual UUID)
+GET {{baseUrl}}/classifications/<id>
+
+### Delete classification (replace <id> with actual UUID)
+DELETE {{baseUrl}}/classifications/<id>

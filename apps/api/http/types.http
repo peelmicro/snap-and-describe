@@ -1,0 +1,27 @@
+@baseUrl = http://localhost:3000
+
+### List all types
+GET {{baseUrl}}/types
+
+### Get type by code
+GET {{baseUrl}}/types/code/food
+
+### Create a new type
+POST {{baseUrl}}/types
+Content-Type: application/json
+
+{
+  "code": "animals",
+  "name": "Animals and Pets"
+}
+
+### Update a type (replace <id> with actual UUID)
+PUT {{baseUrl}}/types/<id>
+Content-Type: application/json
+
+{
+  "name": "Animals, Pets and Wildlife"
+}
+
+### Delete a type (replace <id> with actual UUID)
+DELETE {{baseUrl}}/types/<id>

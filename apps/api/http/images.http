@@ -1,0 +1,39 @@
+@baseUrl = http://localhost:3000
+
+### List all images (paginated)
+GET {{baseUrl}}/images?page=1&limit=10
+
+### List images filtered by type
+GET {{baseUrl}}/images?type=food
+
+### List images filtered by tag
+GET {{baseUrl}}/images?tag=sunset
+
+### Get image by code
+GET {{baseUrl}}/images/code/IMG-2026-04-000001
+
+### Get image by id (with classifications and conversations — replace <id> with actual UUID)
+GET {{baseUrl}}/images/cbaab5c4-4e55-4dd7-983a-36f7d8f90d8f
+
+### Upload an image (replace path with actual file)
+POST {{baseUrl}}/images/upload
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="photo.jpg"
+Content-Type: image/jpeg
+
+< /tmp/test-food.jpg
+--boundary--
+
+### Update image metadata (replace <id> with actual UUID)
+PUT {{baseUrl}}/images/<id>
+Content-Type: application/json
+
+{
+  "name": "my-photo.jpg",
+  "tags": ["updated", "tag"]
+}
+
+### Delete an image (replace <id> with actual UUID)
+DELETE {{baseUrl}}/images/<id>

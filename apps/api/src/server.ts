@@ -3,6 +3,9 @@ import { resolve } from "node:path";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import { ensureBucket } from "./storage/minio-client.ts";
+import { typesRoutes } from "./types/routes.ts";
+import { imagesRoutes } from "./images/routes.ts";
+import { classificationsRoutes } from "./classifications/routes.ts";
 
 // Load .env from project root
 config({ path: resolve(import.meta.dirname, "../../../.env") });
@@ -16,6 +19,10 @@ await app.register(cors);
 app.get("/health", async () => {
   return { status: "ok" };
 });
+
+await app.register(typesRoutes);
+await app.register(imagesRoutes);
+await app.register(classificationsRoutes);
 
 try {
   await ensureBucket();
