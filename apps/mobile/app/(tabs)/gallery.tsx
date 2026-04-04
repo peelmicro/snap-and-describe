@@ -110,8 +110,8 @@ export default function GalleryScreen() {
       {/* Results count */}
       {isSearching && searchData && (
         <Text style={styles.resultCount}>
-          {searchData.total} result{searchData.total !== 1 ? "s" : ""} for "
-          {searchData.query}"
+          {searchData.total} result{searchData.total !== 1 ? "s" : ""} for
+          {" \u201C"}{searchData.query}{"\u201D"}
         </Text>
       )}
 

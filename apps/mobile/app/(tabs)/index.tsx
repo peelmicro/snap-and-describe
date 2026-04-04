@@ -23,7 +23,6 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  Platform,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
@@ -56,7 +55,7 @@ export default function HomeScreen() {
         }
       })();
     }
-  }, []);
+  }, [upload]);
 
   /**
    * Opens the live camera screen.

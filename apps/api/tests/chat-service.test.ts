@@ -45,8 +45,8 @@ describe("Chat Service Logic", () => {
     });
 
     it("should handle missing tags", () => {
-      const tags: string[] | null = null;
-      const fallback = tags?.join(", ") || "No tags";
+      const tags = null as string[] | null;
+      const fallback = (tags !== null ? tags.join(", ") : null) || "No tags";
       expect(fallback).toBe("No tags");
     });
 
