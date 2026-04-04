@@ -29,6 +29,36 @@ services:
     volumes:
       - minio_data:/data
 
+  api:
+    build:
+      context: ./apps/api
+    container_name: snap-api
+    ports:
+      - "3000:3000"
+    environment:
+      # Inside Docker, services reference each other by service name, not localhost
+      DATABASE_URL: postgresql://${POSTGRES_USER:-snap}:${POSTGRES_PASSWORD:-snap123}@postgres:5432/${POSTGRES_DB:-snapdescribe}
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      API_PORT: 3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
+
+  web:
+    build:
+      context: ./apps/mobile
+    container_name: snap-web
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
 volumes:
   postgres_data:
   minio_data:
