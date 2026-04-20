@@ -6,6 +6,13 @@ Built as a portfolio project demonstrating Fastify + Expo Router + Anthropic Cla
 
 ---
 
+## Demo
+
+![Demo](docs/demo.gif)
+*End-to-end flow: take a photo → Claude Vision analysis → gallery → chat about the photo — on web, Android, and iPad.*
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -24,47 +31,53 @@ Built as a portfolio project demonstrating Fastify + Expo Router + Anthropic Cla
 
 ## How to Run
 
+**Prerequisites:** Node.js 24+, Docker, and Docker Compose. Get an `ANTHROPIC_API_KEY` from https://console.anthropic.com.
+
 ```bash
+# 1. Clone the repository
 git clone https://github.com/peelmicro/snap-and-describe.git
 cd snap-and-describe
+
+# 2. Copy environment template and add your Anthropic API key
+cp .env.example .env
+# Edit .env and set ANTHROPIC_API_KEY=sk-ant-...
+
+# 3. Install dependencies for API and Expo projects
+npm run install:all
+
+# 4. Start PostgreSQL + MinIO + API in Docker
+npm run dc:dev
+
+# 5. Run Drizzle migrations and seed reference data
+npm run db:setup
+
+# 6. Start the Expo dev server (web + mobile)
+npm run expo:start
 ```
 
-### Option 1 — Development (recommended)
-
-Best for testing on mobile devices via Expo Go + web browser.
-
-**Prerequisites:** Node.js 24+, Docker, and Docker Compose.
-
-```bash
-cp .env.example .env              # Edit and add your ANTHROPIC_API_KEY
-npm run install:all               # Install API and Expo dependencies
-npm run dc:dev                    # Start PostgreSQL + MinIO + API in Docker
-npm run db:setup                  # Create tables + seed data (5 images, 5 types, 10 classifications)
-npm run expo:start                # Expo dev server — scan QR for mobile, press w for web
-```
+The last command shows a QR code and URLs. Scan it with **Expo Go** (Android) or the **Camera app** (iOS/iPad), or press **`w`** to open the web version at http://localhost:8081.
 
 This starts:
 - **PostgreSQL** on port **5432**
-- **MinIO** on port **9000** (Console: http://localhost:9001, login: minioadmin/minioadmin)
+- **MinIO** on port **9000** (Console: http://localhost:9001, login: minioadmin / minioadmin)
 - **API** on port **3000** (http://localhost:3000/health)
 - **Expo dev server** on port **8081** (http://localhost:8081 for web)
 
-Scan the QR code with **Expo Go** (Android) or the **Camera app** (iOS/iPad) to test on mobile.
+![MinIO Console](docs/minio.png)
+*MinIO Object Browser — seeded images plus user uploads stored in the `images` bucket with auto-generated codes.*
 
-### Option 2 — Docker Compose (full stack, web only)
+### Production-like web deployment (optional)
 
-No Node.js install needed. Serves a static web build via Nginx.
+To serve the Expo web build via Nginx instead of the dev server:
 
 ```bash
-cp .env.example .env              # Edit and add your ANTHROPIC_API_KEY
-docker compose up -d --build      # Build and start all 4 services
-npm run db:setup                  # Create tables + seed data
+docker compose up -d --build      # Build and start all 4 services including Nginx web (port 8080)
+npm run db:setup                  # Only needed on first run
 ```
 
-This starts all services from Option 1 plus:
-- **Web (Nginx)** on port **8080** (http://localhost:8080)
+Open http://localhost:8080 — this is the static export served by Nginx (no hot reload, no mobile testing).
 
-> **Note:** This option does not support mobile testing. Use Option 1 for Expo Go.
+> **Note:** For mobile testing via Expo Go, always use `npm run expo:start` — the Nginx container only serves the web build.
 
 ### Environment Variables
 
@@ -133,6 +146,56 @@ Ask follow-up questions about any photo. Claude receives the photo's description
 
 ---
 
+## Screenshots
+
+The app was tested on three platforms: **desktop web (Chrome)**, **Android (Expo Go)**, and **iPad (Expo Go)**. The same Expo Router codebase powers all three.
+
+### Upload / Home screen
+
+| Web | Android | iPad |
+|-----|---------|------|
+| ![Upload on web](docs/home-web.png) | ![Upload on Android](docs/home-android.jpeg) | ![Upload on iPad](docs/home-ipad.jpeg) |
+
+*Initial app state across platforms — the Upload tab with **Take Photo** (live camera) and **Upload Photo** (file/gallery picker).*
+
+### Upload flow (web, file picker)
+
+| Uploading | Analysis complete |
+|-----------|------------------|
+| ![Uploading on web](docs/upload-picture-web.png) | ![Analysis on web](docs/upload-picture-web-analysis.png) |
+
+*Pick a file, watch the "Uploading and analyzing with AI…" indicator, then see the AI-generated name, description, and tags inline.*
+
+### Take Photo flow (mobile, live camera)
+
+| Android — analyzing | Android — result |
+|--------------------|------------------|
+| ![Take photo Android](docs/take-picture-android.jpeg) | ![Take photo Android analysis](docs/take-picture-android-analysis.jpeg) |
+
+| iPad — analyzing | iPad — result |
+|------------------|---------------|
+| ![Take photo iPad](docs/take-picture-ipad.jpeg) | ![Take photo iPad analysis](docs/take-picture-ipad-analysis.jpeg) |
+
+*Native camera capture via `expo-camera`'s `CameraView`, then automatic upload → Claude Vision analysis → "View Details & Chat".*
+
+### Gallery (3-column grid + search)
+
+| Web | Android | iPad |
+|-----|---------|------|
+| ![Gallery on web](docs/web-gallery.png) | ![Gallery on Android](docs/android-gallery.jpeg) | ![Gallery on iPad](docs/ipad-gallery.jpeg) |
+
+*Seeded solid-color thumbnails alongside real uploaded photos, with full-text search across descriptions, names, and tags.*
+
+### Photo detail + chat
+
+| Detail view | Ask about the photo |
+|-------------|--------------------|
+| ![Photo detail](docs/web-photo-detail.png) | ![Chat about photo](docs/web-photo-detail-ask-about.png) |
+
+*AI analysis (suggested name, description, tags), classifications with properties, and a chat that receives the photo context plus full conversation history.*
+
+---
+
 ## API Endpoints
 
 | Method | Path | Description |
@@ -162,6 +225,9 @@ Ask follow-up questions about any photo. Claude receives the photo's description
 | GET | `/search?q=sunset` | Full-text search across descriptions and tags |
 
 `.http` files for VS Code REST Client are in `apps/api/http/`.
+
+![API via REST Client](docs/http.png)
+*Hitting `GET /images/:id` from VS Code's REST Client — the response includes the AI description, tags, classifications, and presigned MinIO URL.*
 
 ---
 
